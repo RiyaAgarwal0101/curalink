@@ -1,0 +1,154 @@
+*, *::before, *::after { 
+  box-sizing: border-box; 
+  margin: 0; 
+  padding: 0; 
+}
+
+:root {
+  /* Backgrounds (purple-tinted dark) */
+  --bg: #0b0613;
+  --bg2: #120a1f;
+  --bg3: #1a0f2b;
+  --bg4: #24143a;
+
+  /* Surfaces */
+  --surface: #1e1233;
+  --surface2: #2a1847;
+
+  /* Borders */
+  --border: rgba(224,170,255,0.12);
+  --border2: rgba(224,170,255,0.22);
+
+  /* Your palette */
+  --accent: #9D4EDD;
+  --accent2: #7B2CBF;
+  --accent3: #4B0082;
+
+  /* Status */
+  --warn: #E0AAFF;
+  --danger: #ff6b6b;
+
+  /* Text */
+  --text: #ffffff;
+  --text2: #d8b4ff;
+  --text3: #a06cd5;
+
+  /* Fonts */
+  --serif: 'Libre Baskerville', Georgia, serif;
+  --sans: 'DM Sans', system-ui, sans-serif;
+
+  /* UI */
+  --radius: 12px;
+  --radius-lg: 20px;
+
+  /* Shadows */
+  --shadow: 0 4px 24px rgba(0,0,0,0.6);
+  --shadow-accent: 0 0 30px rgba(157,78,221,0.25);
+
+  --transition: 0.2s ease;
+}
+
+html { 
+  scroll-behavior: smooth; 
+}
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.65;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { 
+  width: 5px; 
+  height: 5px; 
+}
+
+::-webkit-scrollbar-track { 
+  background: transparent; 
+}
+
+::-webkit-scrollbar-thumb { 
+  background: var(--bg4); 
+  border-radius: 4px; 
+}
+
+::-webkit-scrollbar-thumb:hover { 
+  background: var(--surface); 
+}
+
+/* Selection */
+::selection { 
+  background: rgba(157,78,221,0.25); 
+  color: #ffffff; 
+}
+
+/* Animations */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(157,78,221,0.15); }
+  50% { box-shadow: 0 0 40px rgba(157,78,221,0.35); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes typingDot {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes scanline {
+  0% { top: -100%; }
+  100% { top: 200%; }
+}
+
+.animate-fade-up { 
+  animation: fadeUp 0.5s ease forwards; 
+}
+
+.animate-fade-in { 
+  animation: fadeIn 0.3s ease forwards; 
+}
+
+/* Utility */
+.sr-only { 
+  position: absolute; 
+  width: 1px; 
+  height: 1px; 
+  padding: 0; 
+  margin: -1px; 
+  overflow: hidden; 
+  clip: rect(0,0,0,0); 
+  white-space: nowrap; 
+  border: 0; 
+}
