@@ -138,7 +138,7 @@ export default function ChatPage() {
         {/* Header */}
         <header className={styles.header}>
           <div className={styles.logo}>
-            <span className={styles.logoGlow}>C</span>uralink
+            <span className={styles.logoGlow}>Curalink</span>
           </div>
 
           {activeResult && (
@@ -185,7 +185,7 @@ export default function ChatPage() {
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={handleKey}
-              placeholder="Ask something..."
+              placeholder="Ask anything..."
               rows={1}
             />
             <button
@@ -200,7 +200,7 @@ export default function ChatPage() {
 
         {/* Footer */}
         <footer className={styles.footer}>
-          Made by <span>R aga</span>
+          Made by <span>Riya Agarwal</span>
         </footer>
       </main>
 
