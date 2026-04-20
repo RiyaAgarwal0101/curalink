@@ -64,8 +64,8 @@ export default function LandingPage() {
       {/* Navbar */}
       <nav className={styles.nav}>
         <div className={styles.logo}>
-          <span className={styles.logoAccent}>Cura</span>
-          <span className={styles.logoWhite}>link</span>
+          <span className={styles.logoAccent}>Curalink</span>
+          /* {/* <span className={styles.logoWhite}>link</span> */} */
         </div>
         <div className={styles.navTag}>AI Medical Research</div>
       </nav>
