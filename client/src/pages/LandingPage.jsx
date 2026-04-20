@@ -3,14 +3,13 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import styles from './LandingPage.module.css'
 
-// ✅ FIXED: remove trailing slash automatically
 const API = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '')
 
 const EXAMPLE_QUERIES = [
-  { disease: 'Parkinson\'s disease', query: 'Deep Brain Stimulation', icon: '⬡' },
-  { disease: 'Lung Cancer', query: 'Latest immunotherapy treatments', icon: '⬡' },
-  { disease: 'Type 2 Diabetes', query: 'Clinical trials recruiting', icon: '⬡' },
-  { disease: 'Alzheimer\'s disease', query: 'Amyloid beta inhibitors', icon: '⬡' },
+  { disease: "Parkinson's disease", query: 'Deep Brain Stimulation' },
+  { disease: 'Lung Cancer', query: 'Latest immunotherapy treatments' },
+  { disease: 'Type 2 Diabetes', query: 'Clinical trials recruiting' },
+  { disease: "Alzheimer's disease", query: 'Amyloid beta inhibitors' },
 ]
 
 export default function LandingPage() {
@@ -33,14 +32,7 @@ export default function LandingPage() {
     setLoading(true)
 
     try {
-      const url = `${API}/api/session`
-
-      // 🔍 Debug logs (remove after confirming)
-      console.log("ENV:", import.meta.env.VITE_API_URL)
-      console.log("API:", API)
-      console.log("FINAL URL:", url)
-
-      const res = await axios.post(url, form)
+      const res = await axios.post(`${API}/api/session`, form)
 
       navigate(`/chat/${res.data.sessionId}`, {
         state: {
@@ -50,8 +42,8 @@ export default function LandingPage() {
         }
       })
 
-    } catch (err) {
-      setError('Could not connect to server. Please ensure the backend is running.')
+    } catch {
+      setError('Server connection failed.')
     } finally {
       setLoading(false)
     }
@@ -62,137 +54,104 @@ export default function LandingPage() {
 
   return (
     <div className={styles.root}>
+      
+      {/* Background */}
       <div className={styles.bg}>
-        <div className={styles.grid} />
         <div className={styles.glow1} />
         <div className={styles.glow2} />
-        <div className={styles.scanline} />
       </div>
 
+      {/* Navbar */}
       <nav className={styles.nav}>
         <div className={styles.logo}>
-          <span className={styles.logoMark}>C</span>
-          <span className={styles.logoText}>uralink</span>
+          <span className={styles.logoGlow}>C</span>uralink
         </div>
-        <div className={styles.navTag}>AI Medical Research</div>
+        <div className={styles.navTag}>AI Research Assistant</div>
       </nav>
 
+      {/* Main */}
       <main className={styles.main}>
+        
+        {/* Hero */}
         <div className={styles.hero}>
-          <div className={styles.badge}>Research-backed · Source-cited · Context-aware</div>
+          <div className={styles.badge}>AI-powered · Evidence-based</div>
+
           <h1 className={styles.headline}>
             Medical research,<br />
-            <em>reasoned for you.</em>
+            <span>reimagined.</span>
           </h1>
+
           <p className={styles.sub}>
-            Enter your condition and query. Curalink retrieves publications from PubMed and OpenAlex,
-            active clinical trials, and delivers structured insights — powered by open-source AI.
+            Explore real publications, clinical trials, and expert insights —
+            all synthesized into clear, structured answers.
           </p>
         </div>
 
+        {/* Form */}
         <div className={styles.formWrap}>
           <form onSubmit={handleSubmit} className={styles.form}>
+
             <div className={styles.formGrid}>
-              <div className={styles.field}>
-                <label className={styles.label}>
-                  Patient name <span className={styles.opt}>optional</span>
-                </label>
-                <input
-                  className={styles.input}
-                  name="patientName"
-                  value={form.patientName}
-                  onChange={handleChange}
-                  placeholder="e.g. John Smith"
-                  autoComplete="off"
-                />
-              </div>
-
-              <div className={styles.field}>
-                <label className={styles.label}>
-                  Location <span className={styles.opt}>optional</span>
-                </label>
-                <input
-                  className={styles.input}
-                  name="location"
-                  value={form.location}
-                  onChange={handleChange}
-                  placeholder="e.g. Toronto, Canada"
-                />
-              </div>
-            </div>
-
-            <div className={styles.field}>
-              <label className={styles.label}>
-                Disease or condition <span className={styles.req}>*</span>
-              </label>
               <input
-                className={`${styles.input} ${styles.inputLg}`}
-                name="disease"
-                value={form.disease}
+                className={styles.input}
+                name="patientName"
+                value={form.patientName}
                 onChange={handleChange}
-                placeholder="e.g. Parkinson's disease, Type 2 Diabetes, Lung Cancer"
-                required
+                placeholder="Patient name (optional)"
+              />
+
+              <input
+                className={styles.input}
+                name="location"
+                value={form.location}
+                onChange={handleChange}
+                placeholder="Location (optional)"
               />
             </div>
 
-            <div className={styles.field}>
-              <label className={styles.label}>
-                Research query <span className={styles.opt}>optional</span>
-              </label>
-              <input
-                className={`${styles.input} ${styles.inputLg}`}
-                name="query"
-                value={form.query}
-                onChange={handleChange}
-                placeholder="e.g. Deep brain stimulation, latest treatments, clinical trials"
-              />
-            </div>
+            <input
+              className={`${styles.input} ${styles.inputLg}`}
+              name="disease"
+              value={form.disease}
+              onChange={handleChange}
+              placeholder="Disease or condition..."
+              required
+            />
+
+            <input
+              className={`${styles.input} ${styles.inputLg}`}
+              name="query"
+              value={form.query}
+              onChange={handleChange}
+              placeholder="Research query..."
+            />
 
             {error && <div className={styles.error}>{error}</div>}
 
-            <button type="submit" className={styles.btn} disabled={loading}>
-              {loading ? (
-                <>
-                  <span className={styles.spinner} /> Initializing session...
-                </>
-              ) : (
-                <>
-                  <span>Begin Research Session</span>
-                  <span className={styles.arrow}>→</span>
-                </>
-              )}
+            <button className={styles.btn} disabled={loading}>
+              {loading ? 'Starting...' : 'Start Research →'}
             </button>
           </form>
 
+          {/* Examples */}
           <div className={styles.examples}>
-            <div className={styles.examplesLabel}>Try an example</div>
-            <div className={styles.examplesList}>
-              {EXAMPLE_QUERIES.map((ex, i) => (
-                <button
-                  key={i}
-                  className={styles.exampleChip}
-                  onClick={() => useExample(ex)}
-                >
-                  <span className={styles.exIcon}>{ex.icon}</span>
-                  <span>{ex.disease} — {ex.query}</span>
-                </button>
-              ))}
-            </div>
+            {EXAMPLE_QUERIES.map((ex, i) => (
+              <button
+                key={i}
+                className={styles.exampleChip}
+                onClick={() => useExample(ex)}
+              >
+                {ex.disease} — {ex.query}
+              </button>
+            ))}
           </div>
         </div>
 
-        <div className={styles.sources}>
-          <span className={styles.sourcesLabel}>Data sources</span>
-          <div className={styles.sourcesBadges}>
-            <span className={styles.sourceBadge}>PubMed NCBI</span>
-            <span className={styles.dot}>·</span>
-            <span className={styles.sourceBadge}>OpenAlex</span>
-            <span className={styles.dot}>·</span>
-            <span className={styles.sourceBadge}>ClinicalTrials.gov</span>
-            <span className={styles.dot}>·</span>
-            <span className={styles.sourceBadge}>Llama 3.3 via Hugging Face</span>
-          </div>
-        </div>
+        {/* Footer */}
+        <footer className={styles.footer}>
+          Made by <span>R aga</span>
+        </footer>
+
       </main>
     </div>
   )
