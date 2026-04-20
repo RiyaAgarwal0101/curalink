@@ -65,9 +65,8 @@ export default function LandingPage() {
       <nav className={styles.nav}>
         <div className={styles.logo}>
           <span className={styles.logoAccent}>Curalink</span>
-          /* {/* <span className={styles.logoWhite}>link</span> */} */
         </div>
-        <div className={styles.navTag}>AI Medical Research</div>
+        <div className={styles.navTag}>AI Medical Research Assistant</div>
       </nav>
 
       {/* Main */}
@@ -77,13 +76,13 @@ export default function LandingPage() {
           
           {/* Hero */}
           <div className={styles.hero}>
-            <div className={styles.badge}>Research-backed · Source-cited · Context-aware</div>
+            <div className={styles.badge}>Research-based · Source-linked · Context-aware</div>
             <h1 className={styles.headline}>
-              Medical research,<br />
-              <em>reasoned for you.</em>
+              Where research meets <br />
+              <em>reasoning.</em>
             </h1>
             <p className={styles.sub}>
-              Enter your condition and query. Get real publications, clinical trials, and AI insights.
+              Start with a condition. Explore real publications, clinical trials, and AI insights in one place.
             </p>
           </div>
 
