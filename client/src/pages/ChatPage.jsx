@@ -6,7 +6,8 @@ import MessageBubble from '../components/MessageBubble'
 import ResearchPanel from '../components/ResearchPanel'
 import TypingIndicator from '../components/TypingIndicator'
 
-const API = import.meta.env.VITE_API_URL || ''
+// ✅ FIXED: remove any trailing slash automatically
+const API = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '')
 
 export default function ChatPage() {
   const { sessionId } = useParams()
@@ -40,6 +41,7 @@ export default function ChatPage() {
   const sendQuery = async (queryText) => {
     const q = queryText || input.trim()
     if (!q || loading) return
+
     setInput('')
     setError('')
     setLoading(true)
@@ -48,19 +50,29 @@ export default function ChatPage() {
     setMessages(prev => [...prev, userMsg])
 
     try {
-      const res = await axios.post(`${API}/api/query/${sessionId}`, {
+      const url = `${API}/api/query/${sessionId}`
+
+      // 🔍 Debug logs (remove after testing)
+      console.log("ENV:", import.meta.env.VITE_API_URL)
+      console.log("API:", API)
+      console.log("FINAL URL:", url)
+
+      const res = await axios.post(url, {
         query: q,
         disease
       })
+
       const assistantMsg = {
         id: Date.now() + 1,
         role: 'assistant',
         content: res.data.personalizedRecommendation || 'Research complete.',
         data: res.data
       }
+
       setMessages(prev => [...prev, assistantMsg])
       setActiveResult(res.data)
       setPanelOpen(true)
+
     } catch (err) {
       setError(err.response?.data?.error || 'Research failed. Please try again.')
       setMessages(prev => [...prev, {
@@ -95,12 +107,15 @@ export default function ChatPage() {
         <button className={styles.backBtn} onClick={() => navigate('/')}>
           <span>←</span> New session
         </button>
+
         <div className={styles.sessionInfo}>
           <div className={styles.sessionLabel}>Current session</div>
           <div className={styles.sessionDisease}>{disease || 'General Research'}</div>
           {patientName && <div className={styles.sessionPatient}>{patientName}</div>}
         </div>
+
         <div className={styles.sidebarDivider} />
+
         <div className={styles.sidebarSection}>
           <div className={styles.sidebarLabel}>Data sources</div>
           <div className={styles.sourceList}>
@@ -110,19 +125,31 @@ export default function ChatPage() {
             <div className={styles.sourceItem}><span className={styles.sourceDot} style={{background:'#ff9f43'}} />Llama 3.3</div>
           </div>
         </div>
+
         <div className={styles.sidebarDivider} />
+
         <div className={styles.sidebarSection}>
           <div className={styles.sidebarLabel}>Quick queries</div>
           <div className={styles.quickList}>
             {FOLLOW_UP.map((q, i) => (
-              <button key={i} className={styles.quickBtn} onClick={() => { setInput(q); inputRef.current?.focus() }}>
+              <button
+                key={i}
+                className={styles.quickBtn}
+                onClick={() => {
+                  setInput(q)
+                  inputRef.current?.focus()
+                }}
+              >
                 {q}
               </button>
             ))}
           </div>
         </div>
+
         <div className={styles.sidebarFooter}>
-          <div className={styles.disclaimer}>For research purposes only. Always consult a qualified healthcare provider.</div>
+          <div className={styles.disclaimer}>
+            For research purposes only. Always consult a qualified healthcare provider.
+          </div>
         </div>
       </aside>
 
@@ -136,11 +163,13 @@ export default function ChatPage() {
             </div>
             <div className={styles.headerBadge}>{disease || 'Research Session'}</div>
           </div>
+
           {activeResult && (
             <button className={styles.panelToggle} onClick={() => setPanelOpen(p => !p)}>
               {panelOpen ? 'Hide sources' : 'View sources'}
               <span className={styles.panelCount}>
-                {(activeResult.publications?.length || 0) + (activeResult.clinicalTrialsData?.length || 0)}
+                {(activeResult.publications?.length || 0) +
+                  (activeResult.clinicalTrialsData?.length || 0)}
               </span>
             </button>
           )}
@@ -155,13 +184,6 @@ export default function ChatPage() {
                 Ask anything about <strong>{disease}</strong>. Curalink will retrieve
                 real publications, clinical trials, and synthesize an evidence-backed answer.
               </div>
-              <div className={styles.emptySuggestions}>
-                {['Latest treatments', 'Clinical trials recruiting', 'Side effects and risks', 'Top researchers'].map((s, i) => (
-                  <button key={i} className={styles.suggestionChip} onClick={() => sendQuery(s + ' for ' + disease)}>
-                    {s}
-                  </button>
-                ))}
-              </div>
             </div>
           )}
 
@@ -170,7 +192,10 @@ export default function ChatPage() {
               key={msg.id}
               message={msg}
               index={i}
-              onViewSources={() => { setActiveResult(msg.data); setPanelOpen(true) }}
+              onViewSources={() => {
+                setActiveResult(msg.data)
+                setPanelOpen(true)
+              }}
             />
           ))}
 
@@ -205,7 +230,9 @@ export default function ChatPage() {
               {loading ? <span className={styles.spinner} /> : '↑'}
             </button>
           </div>
-          <div className={styles.inputHint}>Press Enter to send · Shift+Enter for new line</div>
+          <div className={styles.inputHint}>
+            Press Enter to send · Shift+Enter for new line
+          </div>
         </div>
       </main>
 
