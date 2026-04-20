@@ -6,7 +6,6 @@ import MessageBubble from '../components/MessageBubble'
 import ResearchPanel from '../components/ResearchPanel'
 import TypingIndicator from '../components/TypingIndicator'
 
-// ✅ FIXED: remove any trailing slash automatically
 const API = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '')
 
 export default function ChatPage() {
@@ -52,11 +51,6 @@ export default function ChatPage() {
     try {
       const url = `${API}/api/query/${sessionId}`
 
-      // 🔍 Debug logs (remove after testing)
-      console.log("ENV:", import.meta.env.VITE_API_URL)
-      console.log("API:", API)
-      console.log("FINAL URL:", url)
-
       const res = await axios.post(url, {
         query: q,
         disease
@@ -74,11 +68,11 @@ export default function ChatPage() {
       setPanelOpen(true)
 
     } catch (err) {
-      setError(err.response?.data?.error || 'Research failed. Please try again.')
+      setError(err.response?.data?.error || 'Research failed.')
       setMessages(prev => [...prev, {
         id: Date.now() + 1,
         role: 'error',
-        content: err.response?.data?.error || 'An error occurred. Please try again.'
+        content: err.response?.data?.error || 'Error occurred.'
       }])
     } finally {
       setLoading(false)
@@ -97,93 +91,69 @@ export default function ChatPage() {
     'What are the side effects?',
     'Are there clinical trials I can join?',
     'What do top researchers say?',
-    'Explain this to a non-specialist',
+    'Explain this simply',
   ]
 
   return (
     <div className={styles.root}>
+      
       {/* Sidebar */}
       <aside className={styles.sidebar}>
         <button className={styles.backBtn} onClick={() => navigate('/')}>
-          <span>←</span> New session
+          ← New session
         </button>
 
         <div className={styles.sessionInfo}>
-          <div className={styles.sessionLabel}>Current session</div>
+          <div className={styles.sessionLabel}>Session</div>
           <div className={styles.sessionDisease}>{disease || 'General Research'}</div>
           {patientName && <div className={styles.sessionPatient}>{patientName}</div>}
         </div>
 
-        <div className={styles.sidebarDivider} />
-
         <div className={styles.sidebarSection}>
-          <div className={styles.sidebarLabel}>Data sources</div>
-          <div className={styles.sourceList}>
-            <div className={styles.sourceItem}><span className={styles.sourceDot} style={{background:'#4fffb0'}} />PubMed NCBI</div>
-            <div className={styles.sourceItem}><span className={styles.sourceDot} style={{background:'#00d4ff'}} />OpenAlex</div>
-            <div className={styles.sourceItem}><span className={styles.sourceDot} style={{background:'#7b68ff'}} />ClinicalTrials.gov</div>
-            <div className={styles.sourceItem}><span className={styles.sourceDot} style={{background:'#ff9f43'}} />Llama 3.3</div>
-          </div>
-        </div>
-
-        <div className={styles.sidebarDivider} />
-
-        <div className={styles.sidebarSection}>
-          <div className={styles.sidebarLabel}>Quick queries</div>
-          <div className={styles.quickList}>
-            {FOLLOW_UP.map((q, i) => (
-              <button
-                key={i}
-                className={styles.quickBtn}
-                onClick={() => {
-                  setInput(q)
-                  inputRef.current?.focus()
-                }}
-              >
-                {q}
-              </button>
-            ))}
-          </div>
+          <div className={styles.sidebarLabel}>Quick prompts</div>
+          {FOLLOW_UP.map((q, i) => (
+            <button
+              key={i}
+              className={styles.quickBtn}
+              onClick={() => {
+                setInput(q)
+                inputRef.current?.focus()
+              }}
+            >
+              {q}
+            </button>
+          ))}
         </div>
 
         <div className={styles.sidebarFooter}>
           <div className={styles.disclaimer}>
-            For research purposes only. Always consult a qualified healthcare provider.
+            Research use only
           </div>
         </div>
       </aside>
 
-      {/* Chat area */}
+      {/* Main */}
       <main className={styles.main}>
+        
+        {/* Header */}
         <header className={styles.header}>
-          <div className={styles.headerLeft}>
-            <div className={styles.logo}>
-              <span className={styles.logoMark}>C</span>
-              <span className={styles.logoText}>uralink</span>
-            </div>
-            <div className={styles.headerBadge}>{disease || 'Research Session'}</div>
+          <div className={styles.logo}>
+            <span className={styles.logoGlow}>C</span>uralink
           </div>
 
           {activeResult && (
             <button className={styles.panelToggle} onClick={() => setPanelOpen(p => !p)}>
-              {panelOpen ? 'Hide sources' : 'View sources'}
-              <span className={styles.panelCount}>
-                {(activeResult.publications?.length || 0) +
-                  (activeResult.clinicalTrialsData?.length || 0)}
-              </span>
+              Sources ({(activeResult.publications?.length || 0)})
             </button>
           )}
         </header>
 
+        {/* Messages */}
         <div className={styles.messages}>
           {messages.length === 0 && !loading && (
             <div className={styles.emptyState}>
-              <div className={styles.emptyIcon}>⬡</div>
-              <div className={styles.emptyTitle}>Research session started</div>
-              <div className={styles.emptyText}>
-                Ask anything about <strong>{disease}</strong>. Curalink will retrieve
-                real publications, clinical trials, and synthesize an evidence-backed answer.
-              </div>
+              <h2>Start your research</h2>
+              <p>Ask anything about <b>{disease}</b></p>
             </div>
           )}
 
@@ -203,13 +173,10 @@ export default function ChatPage() {
           <div ref={bottomRef} />
         </div>
 
-        {error && (
-          <div className={styles.errorBar}>
-            <span>{error}</span>
-            <button onClick={() => setError('')}>×</button>
-          </div>
-        )}
+        {/* Error */}
+        {error && <div className={styles.errorBar}>{error}</div>}
 
+        {/* Input */}
         <div className={styles.inputArea}>
           <div className={styles.inputWrap}>
             <textarea
@@ -218,25 +185,26 @@ export default function ChatPage() {
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={handleKey}
-              placeholder={`Ask about ${disease || 'your condition'}...`}
+              placeholder="Ask something..."
               rows={1}
-              disabled={loading}
             />
             <button
               className={styles.sendBtn}
               onClick={() => sendQuery()}
-              disabled={loading || !input.trim()}
+              disabled={!input.trim()}
             >
-              {loading ? <span className={styles.spinner} /> : '↑'}
+              ↑
             </button>
           </div>
-          <div className={styles.inputHint}>
-            Press Enter to send · Shift+Enter for new line
-          </div>
         </div>
+
+        {/* Footer */}
+        <footer className={styles.footer}>
+          Made by <span>R aga</span>
+        </footer>
       </main>
 
-      {/* Research panel */}
+      {/* Panel */}
       {panelOpen && activeResult && (
         <ResearchPanel
           data={activeResult}
