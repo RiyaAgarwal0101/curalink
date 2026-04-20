@@ -41,7 +41,6 @@ export default function LandingPage() {
           patientName: form.patientName
         }
       })
-
     } catch {
       setError('Server connection failed.')
     } finally {
@@ -64,7 +63,8 @@ export default function LandingPage() {
       {/* Navbar */}
       <nav className={styles.nav}>
         <div className={styles.logo}>
-          <span className={styles.logoGlow}>C</span>uralink
+          <span className={styles.logoWhite}>Cura</span>
+          <span className={styles.logoAccent}>link</span>
         </div>
         <div className={styles.navTag}>AI Research Assistant</div>
       </nav>
@@ -149,7 +149,7 @@ export default function LandingPage() {
 
         {/* Footer */}
         <footer className={styles.footer}>
-          Made by <span>R aga</span>
+          Made by <span>Riya Agarwal</span>
         </footer>
 
       </main>
