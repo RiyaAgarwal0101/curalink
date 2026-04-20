@@ -3,13 +3,13 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import styles from './LandingPage.module.css'
 
-const API = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '')
+const API = import.meta.env.VITE_API_URL || ''
 
 const EXAMPLE_QUERIES = [
-  { disease: "Parkinson's disease", query: 'Deep Brain Stimulation' },
-  { disease: 'Lung Cancer', query: 'Latest immunotherapy treatments' },
-  { disease: 'Type 2 Diabetes', query: 'Clinical trials recruiting' },
-  { disease: "Alzheimer's disease", query: 'Amyloid beta inhibitors' },
+  { disease: "Parkinson's disease", query: 'Deep Brain Stimulation', icon: '⬡' },
+  { disease: 'Lung Cancer', query: 'Latest immunotherapy treatments', icon: '⬡' },
+  { disease: 'Type 2 Diabetes', query: 'Clinical trials recruiting', icon: '⬡' },
+  { disease: "Alzheimer's disease", query: 'Amyloid beta inhibitors', icon: '⬡' },
 ]
 
 export default function LandingPage() {
@@ -22,7 +22,6 @@ export default function LandingPage() {
 
   const handleSubmit = async e => {
     e.preventDefault()
-
     if (!form.disease.trim()) {
       setError('Please enter a disease or condition.')
       return
@@ -42,7 +41,7 @@ export default function LandingPage() {
         }
       })
     } catch {
-      setError('Server connection failed.')
+      setError('Could not connect to server.')
     } finally {
       setLoading(false)
     }
@@ -56,8 +55,10 @@ export default function LandingPage() {
       
       {/* Background */}
       <div className={styles.bg}>
+        <div className={styles.grid} />
         <div className={styles.glow1} />
         <div className={styles.glow2} />
+        <div className={styles.scanline} />
       </div>
 
       {/* Navbar */}
@@ -66,7 +67,7 @@ export default function LandingPage() {
           <span className={styles.logoAccent}>Cura</span>
           <span className={styles.logoWhite}>link</span>
         </div>
-        <div className={styles.navTag}>AI Research Assistant</div>
+        <div className={styles.navTag}>AI Medical Research</div>
       </nav>
 
       {/* Main */}
@@ -76,23 +77,20 @@ export default function LandingPage() {
           
           {/* Hero */}
           <div className={styles.hero}>
-            <div className={styles.badge}>AI-powered · Evidence-based</div>
-
+            <div className={styles.badge}>Research-backed · Source-cited · Context-aware</div>
             <h1 className={styles.headline}>
               Medical research,<br />
-              <span>reimagined.</span>
+              <em>reasoned for you.</em>
             </h1>
-
             <p className={styles.sub}>
-              Explore real publications, clinical trials, and expert insights —
-              all synthesized into clear, structured answers.
+              Enter your condition and query. Get real publications, clinical trials, and AI insights.
             </p>
           </div>
 
           {/* Form */}
           <div className={styles.formWrap}>
             <form onSubmit={handleSubmit} className={styles.form}>
-
+              
               <div className={styles.formGrid}>
                 <input
                   className={styles.input}
@@ -152,9 +150,9 @@ export default function LandingPage() {
         </div>
 
         {/* Footer */}
-        <footer className={styles.footer}>
+        <div className={styles.footer}>
           Made by <span>Riya Agarwal</span>
-        </footer>
+        </div>
 
       </main>
     </div>
