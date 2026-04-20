@@ -63,8 +63,8 @@ export default function LandingPage() {
       {/* Navbar */}
       <nav className={styles.nav}>
         <div className={styles.logo}>
-          <span className={styles.logoWhite}>Cura</span>
-          <span className={styles.logoAccent}>link</span>
+          <span className={styles.logoAccent}>Cura</span>
+          <span className={styles.logoWhite}>link</span>
         </div>
         <div className={styles.navTag}>AI Research Assistant</div>
       </nav>
@@ -72,79 +72,83 @@ export default function LandingPage() {
       {/* Main */}
       <main className={styles.main}>
         
-        {/* Hero */}
-        <div className={styles.hero}>
-          <div className={styles.badge}>AI-powered · Evidence-based</div>
+        <div className={styles.centerWrap}>
+          
+          {/* Hero */}
+          <div className={styles.hero}>
+            <div className={styles.badge}>AI-powered · Evidence-based</div>
 
-          <h1 className={styles.headline}>
-            Medical research,<br />
-            <span>reimagined.</span>
-          </h1>
+            <h1 className={styles.headline}>
+              Medical research,<br />
+              <span>reimagined.</span>
+            </h1>
 
-          <p className={styles.sub}>
-            Explore real publications, clinical trials, and expert insights —
-            all synthesized into clear, structured answers.
-          </p>
-        </div>
-
-        {/* Form */}
-        <div className={styles.formWrap}>
-          <form onSubmit={handleSubmit} className={styles.form}>
-
-            <div className={styles.formGrid}>
-              <input
-                className={styles.input}
-                name="patientName"
-                value={form.patientName}
-                onChange={handleChange}
-                placeholder="Patient name (optional)"
-              />
-
-              <input
-                className={styles.input}
-                name="location"
-                value={form.location}
-                onChange={handleChange}
-                placeholder="Location (optional)"
-              />
-            </div>
-
-            <input
-              className={`${styles.input} ${styles.inputLg}`}
-              name="disease"
-              value={form.disease}
-              onChange={handleChange}
-              placeholder="Disease or condition..."
-              required
-            />
-
-            <input
-              className={`${styles.input} ${styles.inputLg}`}
-              name="query"
-              value={form.query}
-              onChange={handleChange}
-              placeholder="Research query..."
-            />
-
-            {error && <div className={styles.error}>{error}</div>}
-
-            <button className={styles.btn} disabled={loading}>
-              {loading ? 'Starting...' : 'Start Research →'}
-            </button>
-          </form>
-
-          {/* Examples */}
-          <div className={styles.examples}>
-            {EXAMPLE_QUERIES.map((ex, i) => (
-              <button
-                key={i}
-                className={styles.exampleChip}
-                onClick={() => useExample(ex)}
-              >
-                {ex.disease} — {ex.query}
-              </button>
-            ))}
+            <p className={styles.sub}>
+              Explore real publications, clinical trials, and expert insights —
+              all synthesized into clear, structured answers.
+            </p>
           </div>
+
+          {/* Form */}
+          <div className={styles.formWrap}>
+            <form onSubmit={handleSubmit} className={styles.form}>
+
+              <div className={styles.formGrid}>
+                <input
+                  className={styles.input}
+                  name="patientName"
+                  value={form.patientName}
+                  onChange={handleChange}
+                  placeholder="Patient name (optional)"
+                />
+
+                <input
+                  className={styles.input}
+                  name="location"
+                  value={form.location}
+                  onChange={handleChange}
+                  placeholder="Location (optional)"
+                />
+              </div>
+
+              <input
+                className={`${styles.input} ${styles.inputLg}`}
+                name="disease"
+                value={form.disease}
+                onChange={handleChange}
+                placeholder="Disease or condition..."
+                required
+              />
+
+              <input
+                className={`${styles.input} ${styles.inputLg}`}
+                name="query"
+                value={form.query}
+                onChange={handleChange}
+                placeholder="Research query..."
+              />
+
+              {error && <div className={styles.error}>{error}</div>}
+
+              <button className={styles.btn} disabled={loading}>
+                {loading ? 'Starting...' : 'Start Research →'}
+              </button>
+            </form>
+
+            {/* Examples */}
+            <div className={styles.examples}>
+              {EXAMPLE_QUERIES.map((ex, i) => (
+                <button
+                  key={i}
+                  className={styles.exampleChip}
+                  onClick={() => useExample(ex)}
+                >
+                  {ex.disease} — {ex.query}
+                </button>
+              ))}
+            </div>
+          </div>
+
         </div>
 
         {/* Footer */}
