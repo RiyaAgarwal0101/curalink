@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import styles from './LandingPage.module.css'
 
-const API = import.meta.env.VITE_API_URL || ''
+// ✅ FIXED: remove trailing slash automatically
+const API = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '')
 
 const EXAMPLE_QUERIES = [
   { disease: 'Parkinson\'s disease', query: 'Deep Brain Stimulation', icon: '⬡' },
@@ -22,19 +23,42 @@ export default function LandingPage() {
 
   const handleSubmit = async e => {
     e.preventDefault()
-    if (!form.disease.trim()) { setError('Please enter a disease or condition.'); return }
-    setError(''); setLoading(true)
+
+    if (!form.disease.trim()) {
+      setError('Please enter a disease or condition.')
+      return
+    }
+
+    setError('')
+    setLoading(true)
+
     try {
-      const res = await axios.post(`${API}/api/session`, form)
-      navigate(`/chat/${res.data.sessionId}`, { state: { initialQuery: form.query, disease: form.disease, patientName: form.patientName } })
-    } catch {
+      const url = `${API}/api/session`
+
+      // 🔍 Debug logs (remove after confirming)
+      console.log("ENV:", import.meta.env.VITE_API_URL)
+      console.log("API:", API)
+      console.log("FINAL URL:", url)
+
+      const res = await axios.post(url, form)
+
+      navigate(`/chat/${res.data.sessionId}`, {
+        state: {
+          initialQuery: form.query,
+          disease: form.disease,
+          patientName: form.patientName
+        }
+      })
+
+    } catch (err) {
       setError('Could not connect to server. Please ensure the backend is running.')
     } finally {
       setLoading(false)
     }
   }
 
-  const useExample = ex => setForm(f => ({ ...f, disease: ex.disease, query: ex.query }))
+  const useExample = ex =>
+    setForm(f => ({ ...f, disease: ex.disease, query: ex.query }))
 
   return (
     <div className={styles.root}>
@@ -70,7 +94,9 @@ export default function LandingPage() {
           <form onSubmit={handleSubmit} className={styles.form}>
             <div className={styles.formGrid}>
               <div className={styles.field}>
-                <label className={styles.label}>Patient name <span className={styles.opt}>optional</span></label>
+                <label className={styles.label}>
+                  Patient name <span className={styles.opt}>optional</span>
+                </label>
                 <input
                   className={styles.input}
                   name="patientName"
@@ -80,8 +106,11 @@ export default function LandingPage() {
                   autoComplete="off"
                 />
               </div>
+
               <div className={styles.field}>
-                <label className={styles.label}>Location <span className={styles.opt}>optional</span></label>
+                <label className={styles.label}>
+                  Location <span className={styles.opt}>optional</span>
+                </label>
                 <input
                   className={styles.input}
                   name="location"
@@ -93,7 +122,9 @@ export default function LandingPage() {
             </div>
 
             <div className={styles.field}>
-              <label className={styles.label}>Disease or condition <span className={styles.req}>*</span></label>
+              <label className={styles.label}>
+                Disease or condition <span className={styles.req}>*</span>
+              </label>
               <input
                 className={`${styles.input} ${styles.inputLg}`}
                 name="disease"
@@ -105,7 +136,9 @@ export default function LandingPage() {
             </div>
 
             <div className={styles.field}>
-              <label className={styles.label}>Research query <span className={styles.opt}>optional</span></label>
+              <label className={styles.label}>
+                Research query <span className={styles.opt}>optional</span>
+              </label>
               <input
                 className={`${styles.input} ${styles.inputLg}`}
                 name="query"
@@ -119,9 +152,14 @@ export default function LandingPage() {
 
             <button type="submit" className={styles.btn} disabled={loading}>
               {loading ? (
-                <><span className={styles.spinner} /> Initializing session...</>
+                <>
+                  <span className={styles.spinner} /> Initializing session...
+                </>
               ) : (
-                <><span>Begin Research Session</span><span className={styles.arrow}>→</span></>
+                <>
+                  <span>Begin Research Session</span>
+                  <span className={styles.arrow}>→</span>
+                </>
               )}
             </button>
           </form>
@@ -130,7 +168,11 @@ export default function LandingPage() {
             <div className={styles.examplesLabel}>Try an example</div>
             <div className={styles.examplesList}>
               {EXAMPLE_QUERIES.map((ex, i) => (
-                <button key={i} className={styles.exampleChip} onClick={() => useExample(ex)}>
+                <button
+                  key={i}
+                  className={styles.exampleChip}
+                  onClick={() => useExample(ex)}
+                >
                   <span className={styles.exIcon}>{ex.icon}</span>
                   <span>{ex.disease} — {ex.query}</span>
                 </button>
